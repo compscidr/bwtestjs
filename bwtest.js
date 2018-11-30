@@ -328,7 +328,19 @@ function JSBWTest(options) {
   }
 
   function TestResponse() {
-    reTestRunning = 'no';
+    var sendDate = (new Date()).getTime();
+		$.ajax({
+			type: "HEAD",
+			url: "",
+			timeout: 60000,
+			cache: false,
+			success: function(){
+				var receiveDate = (new Date()).getTime();
+				var duration = receiveDate - sendDate;
+				reTestRunning = 'no';
+				typeof settings.testRttCallback === 'function' && settings.testRttCallback(duration);
+			}
+		});
   }
 
   this.stop = function() {

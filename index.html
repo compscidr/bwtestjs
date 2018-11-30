@@ -42,8 +42,8 @@ function uploadCallback(throughput, duration) {
   $('#ulstatus').text("ul " + throughput + "bps " + " " + (throughput / 1024 / 1024) + "Mbps " + duration + "s");
 }
 
-function rttCallback(rtt, duration) {
-
+function rttCallback(rtt) {
+  $('#rttstatus').text("rtt " + rtt + " ms");
 }
 </script>
 

@@ -26,3 +26,9 @@ in the configuration.
 to starting the bandwidth test.
 5. Tie-in to the event-driven callback functions to handle the results of the
 test.
+6. (optional) Open the developer console in chrome / firefox to see logging and network traffic during the test
+
+## Demo
+Running demo at: https://test.rightmesh.io/bwtestjs/
+
+ [![Screenshot](screen.png)](https://www.instagram.com/p/BqzJp_jFziZ)

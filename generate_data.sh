@@ -1,4 +1,4 @@
-#!/bin/#!/usr/bin/env bash
+#!/bin/bash
 dd if=/dev/urandom of=20kb.dat bs=1024 count=20
 dd if=/dev/urandom of=40kb.dat bs=1024 count=40
 dd if=/dev/urandom of=180kb.dat bs=1024 count=180

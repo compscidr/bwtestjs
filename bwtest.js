@@ -26,31 +26,28 @@ function JSBWTest(options) {
   //************************** Configuration START *********************//
   var defaults = {
     // Callback function for Download output
-		testDlCallback: defaultCallbackFunction,
-		// Callback function for Upload output
-		testUlCallback: defaultCallbackFunction,
-		// Callback function for Response output
-		testRttCallback: defaultCallbackFunction,
-		// Callback function for State
-		testStateCallback: defaultCallbackFunction,
-		// Callback function for the finish
-		testFinishCallback: defaultCallbackFunction,
-		// Count of Download Samples taken
-		countDlSamples: 1,
-		// Count of Upload Samples taken
-		countUlSamples: 1,
-		// Count of Response Samples taken
-		countReSamples: 1,
-		// Upload Unit Output
-		uploadUnit: 'bps',
-		// Download Unit Output
-		downloadUnit: 'bps',
-    // Include the Unit on Return,
-		returnUnits: false,
+    testDlCallback: defaultCallbackFunction,
+    // Callback function for Upload output
+    testUlCallback: defaultCallbackFunction,
+    // Callback function for Response output
+    testRttCallback: defaultCallbackFunction,
+    // Callback function for State
+    testStateCallback: defaultCallbackFunction,
+    // Callback function for the finish
+    testFinishCallback: defaultCallbackFunction,
+    // Count of Download Samples taken
+    countDlSamples: 1,
+    // Count of Upload Samples taken
+    countUlSamples: 1,
+    // Count of Response Samples taken
+    countReSamples: 1,
     // Number of parallel connections
-    parallelConnections: 10,
+    parallelConnections: 5,
     // Maximum amount of time (s) for the entire test to run in
     maxExecution: 10,
+    //if you want to have the test files on a different server than this
+    //webserver
+    serverURL: ''
 
     // mapping of file sizes to files
     //if you want a difference amount of time for execution you likely need to
@@ -76,93 +73,93 @@ function JSBWTest(options) {
   //************************** Configuration END *********************//
 
   //** Current State
-	var currentState = 'stopped';
+  var currentState = 'stopped';
 
-	//** Some Global Vars
-	var dlCounts = 0; var dlIntervalId = 0; var dlTestRunning = 'no'
-	var ulCounts = 0; var ulIntervalId = 0; var ulTestRunning = 'no'
-	var reCounts = 0; var reIntervalId = 0; var reTestRunning = 'no'
+  //** Some Global Vars
+  var dlCounts = 0; var dlIntervalId = 0; var dlTestRunning = 'no'
+  var ulCounts = 0; var ulIntervalId = 0; var ulTestRunning = 'no'
+  var reCounts = 0; var reIntervalId = 0; var reTestRunning = 'no'
 
   var uploadData = new Map();
 
   //** Set the current state var from outside
   this.state = function(state){
-  	currentState = state;
-  	return true;
+    currentState = state;
+    return true;
   }
 
   // Set the current state var from internal and call a callback function
   function setCurrentState(state){
-  	currenState = state;
-  	typeof settings.testStateCallback === 'function' && settings.testStateCallback(state);
+    currenState = state;
+    typeof settings.testStateCallback === 'function' && settings.testStateCallback(state);
   }
 
   //** Get the current state var from outside
   this.getCurrentState = function(state){
-  	return currentState;
+    return currentState;
   }
 
   //** Assumes the test is not already running
   this.start = function() {
     console.log('starting test');
     dlCounts = 0;
-		ulCounts = 0;
-		reCounts = 0;
-		testStart();
+    ulCounts = 0;
+    reCounts = 0;
+    testStart();
   }
 
   //** Internal start and stop function
   function testStart(){
-  	if(currentState == 'forcestop'){
-  		setCurrentState('stopped');
-  		typeof settings.testFinishCallback === 'function'
+    if(currentState == 'forcestop'){
+      setCurrentState('stopped');
+      typeof settings.testFinishCallback === 'function'
         && settings.testFinishCallback('finished');
-  		return;
-		}
+      return;
+    }
     setCurrentState('running');
-  	if(dlCounts < settings.countDlSamples){
-  		if(dlTestRunning == 'no' && ulTestRunning == 'no'
+    if(dlCounts < settings.countDlSamples){
+      if(dlTestRunning == 'no' && ulTestRunning == 'no'
           && reTestRunning == 'no'){
-  			dlCounts++;
-  			dlTestRunning = 'yes';
-  			setTimeout(function(){TestDownload(settings.elDlOutput)},
+        dlCounts++;
+        dlTestRunning = 'yes';
+        setTimeout(function(){TestDownload(settings.elDlOutput)},
           settings.testSleepTime);
-  		}
-  		clearTimeout(dlIntervalId)
-  		dlIntervalId = setTimeout(function(){ testStart(); }, 1000);
-  		return;
-  	}
-  	else if(ulCounts < settings.countUlSamples){
-  		if(dlTestRunning == 'no' && ulTestRunning == 'no'
+      }
+      clearTimeout(dlIntervalId)
+      dlIntervalId = setTimeout(function(){ testStart(); }, 1000);
+      return;
+    }
+    else if(ulCounts < settings.countUlSamples){
+      if(dlTestRunning == 'no' && ulTestRunning == 'no'
           && reTestRunning == 'no'){
-  			ulCounts++;
-  			ulTestRunning = 'yes';
-  			setTimeout(function(){TestUpload(settings.elUlOutput)},
+        ulCounts++;
+        ulTestRunning = 'yes';
+        setTimeout(function(){TestUpload(settings.elUlOutput)},
           settings.testSleepTime);
-  		}
-  		clearTimeout(ulIntervalId)
-  		ulIntervalId = setTimeout(function(){ testStart(); }, 1000);
-  		return;
-  	}
-  	else if(reCounts < settings.countReSamples
+      }
+      clearTimeout(ulIntervalId)
+      ulIntervalId = setTimeout(function(){ testStart(); }, 1000);
+      return;
+    }
+    else if(reCounts < settings.countReSamples
         || settings.countReSamples == 'loop') {
-  		if(dlTestRunning == 'no' && ulTestRunning == 'no'
+      if(dlTestRunning == 'no' && ulTestRunning == 'no'
           && reTestRunning == 'no') {
-  			reCounts++;
-  			reTestRunning = 'yes';
-  			setTimeout(
+        reCounts++;
+        reTestRunning = 'yes';
+        setTimeout(
           function() {ulTestRunning = 'no';
             TestResponse(settings.elReOutput)
           },
           settings.testSleepTime);
-  		}
-  		clearTimeout(reIntervalId)
-  		reIntervalId = setTimeout(function(){ testStart(); }, 1000);
-			return;
-  	}
-  	currentState = 'stopped';
-		setCurrentState('stopped');
-  	typeof settings.testFinishCallback === 'function'
+      }
+      clearTimeout(reIntervalId)
+      reIntervalId = setTimeout(function(){ testStart(); }, 1000);
+      return;
+    }
+    currentState = 'stopped';
+    setCurrentState('stopped');
+    typeof settings.testFinishCallback === 'function'
       && settings.testFinishCallback('finished');
   }
 
@@ -213,7 +210,7 @@ function JSBWTest(options) {
       promises.push(
         $.ajax({
           type: "GET",
-          url: file,
+          url: serverURL + file,
           timeout: (settings.maxExecution * 1000 * 2) / 3,
           cache: false,
           success: function(data) {
@@ -296,7 +293,7 @@ function JSBWTest(options) {
       promises.push(
         $.ajax({
           type: "POST",
-          url: "",
+          url: serverURL,
           data: data,
           timeout: (settings.maxExecution * 1000),
           cache: false,
@@ -329,18 +326,18 @@ function JSBWTest(options) {
 
   function TestResponse() {
     var sendDate = (new Date()).getTime();
-		$.ajax({
-			type: "HEAD",
-			url: "",
-			timeout: 60000,
-			cache: false,
-			success: function(){
-				var receiveDate = (new Date()).getTime();
-				var duration = receiveDate - sendDate;
-				reTestRunning = 'no';
-				typeof settings.testRttCallback === 'function' && settings.testRttCallback(duration);
-			}
-		});
+    $.ajax({
+      type: "HEAD",
+      url: serverURL,
+      timeout: 60000,
+      cache: false,
+      success: function(){
+        var receiveDate = (new Date()).getTime();
+        var duration = receiveDate - sendDate;
+        reTestRunning = 'no';
+        typeof settings.testRttCallback === 'function' && settings.testRttCallback(duration);
+      }
+    });
   }
 
   this.stop = function() {
@@ -349,7 +346,7 @@ function JSBWTest(options) {
   }
 
   //** Default callback function
-	function defaultCallbackFunction(value) {
-		window.console && console.log(value);
-	}
+  function defaultCallbackFunction(value) {
+    window.console && console.log(value);
+  }
 }

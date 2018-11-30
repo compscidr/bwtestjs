@@ -1,0 +1,51 @@
+<html>
+<head>
+  <title>JS BW Test</title>
+</head>
+<body>
+
+<h1>JS Bandwidth Test</h1>
+<p>Click the button to start the bandwidth test</p>
+<button onClick="bwTest.start()">Start</button>
+<button onClick="bwTest.stop()">Stop</button>
+
+<div id="dlstatus"></div>
+<div id="ulstatus"></div>
+<div id="rttstatus"></div>
+<div id="state"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
+<script src="bwtest.js"></script>
+
+<script>
+bwTest = new JSBWTest({
+  testStateCallback: stateCallback,
+  testFinishCallback: finishCallback,
+  testDlCallback: downloadCallback,
+  testUlCallback: uploadCallback,
+  testRttCallback: rttCallback
+});
+
+function stateCallback(state) {
+
+}
+
+function finishCallback(value) {
+
+}
+
+function downloadCallback(throughput, duration) {
+  $('#dlstatus').text("dl " + throughput + "bps " + " " + (throughput / 1024 / 1024) + "Mbps " + duration + "s");
+}
+
+function uploadCallback(throughput, duration) {
+  $('#ulstatus').text("ul " + throughput + "bps " + " " + (throughput / 1024 / 1024) + "Mbps " + duration + "s");
+}
+
+function rttCallback(rtt, duration) {
+
+}
+</script>
+
+</body>
+</html>

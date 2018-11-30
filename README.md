@@ -18,10 +18,11 @@ with the target time of about 10 seconds for the total test.
 
 ## Instructions
 1. Clone the repo into your webserver
-2. If you wish to have a separate server to handle the load of the bandwidth
+2. On the webserver, run the `generate_data.sh` file to generate the data files.
+3. If you wish to have a separate server to handle the load of the bandwidth
 tests, host the test transfer files on that server, and set the server url
 in the configuration.
-3. On the client webpage, use jquery's onload, or attach a button click event
+4. On the client webpage, use jquery's onload, or attach a button click event
 to starting the bandwidth test.
-4. Tie-in to the event-driven callback functions to handle the results of the
+5. Tie-in to the event-driven callback functions to handle the results of the
 test.

@@ -192,6 +192,10 @@ function JSBWTest(options) {
         console.log("duration under limit, proceeding to next test");
         latestResult = result;
       }
+
+      if(currentState == 'forcestop') {
+        break;
+      }
     }
     dlTestRunning = 'no';
     typeof settings.testDlCallback === 'function'
@@ -269,6 +273,10 @@ function JSBWTest(options) {
       } else {
         console.log("duration under limit, proceeding to next test");
         latestResult = result;
+      }
+
+      if(currentState == 'forcestop') {
+        break;
       }
     }
     ulTestRunning = 'no';

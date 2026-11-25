@@ -1,0 +1,13 @@
+{
+  "name": "bwtestjs",
+  "private": true,
+  "description": "jQuery based download, upload throughput and rtt test",
+  "license": "Apache-2.0",
+  "scripts": {
+    "lint": "node --check bwtest.js",
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.65.1"
+  }
+}

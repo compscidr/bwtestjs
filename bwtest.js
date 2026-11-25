@@ -47,7 +47,7 @@ function JSBWTest(options) {
     maxExecution: 10,
     //if you want to have the test files on a different server than this
     //webserver
-    serverURL: ''
+    serverURL: '',
 
     // mapping of file sizes to files
     //if you want a difference amount of time for execution you likely need to
@@ -90,7 +90,7 @@ function JSBWTest(options) {
 
   // Set the current state var from internal and call a callback function
   function setCurrentState(state){
-    currenState = state;
+    currentState = state;
     typeof settings.testStateCallback === 'function' && settings.testStateCallback(state);
   }
 
@@ -210,7 +210,7 @@ function JSBWTest(options) {
       promises.push(
         $.ajax({
           type: "GET",
-          url: serverURL + file,
+          url: settings.serverURL + file,
           timeout: (settings.maxExecution * 1000 * 2) / 3,
           cache: false,
           success: function(data) {
@@ -293,7 +293,7 @@ function JSBWTest(options) {
       promises.push(
         $.ajax({
           type: "POST",
-          url: serverURL,
+          url: settings.serverURL,
           data: data,
           timeout: (settings.maxExecution * 1000),
           cache: false,
@@ -328,7 +328,7 @@ function JSBWTest(options) {
     var sendDate = (new Date()).getTime();
     $.ajax({
       type: "HEAD",
-      url: serverURL,
+      url: settings.serverURL,
       timeout: 60000,
       cache: false,
       success: function(){
